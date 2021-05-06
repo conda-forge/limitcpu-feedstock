@@ -1,4 +1,4 @@
-{% set version = "2.6" %}
+{% set version = "2.7" %}
 
 package:
   name: limitcpu
@@ -6,13 +6,13 @@ package:
 
 source:
   url: https://sourceforge.net/projects/limitcpu/files/limitcpu/cpulimit-{{ version }}.tar.gz
-  sha256: 2f8ceeb9de43a6de52ce50e67d618c715e714b72d806f3730b5661d5bfc9c075
+  sha256: 1de040a4f8a40dfe8c7a025fe98075673468fbc3fccccbc231bc7402f62ec4a0
   patches:
     - 0001-Fix-__APPLE_-typo.patch
 
 build:
   number: 0
-  skip: True  # [win or osx]
+  skip: true  # [win or osx]
   script:
     - make install CFLAGS+=' -DVERSION=$(VERSION)'
 
@@ -28,9 +28,9 @@ requirements:
 test:
   commands:
     - '{ cpulimit --help || true ; } | grep -F {{ version }}'
-    - 'cpulimit -vmf -l 100 -- sleep 1'
+    - cpulimit -vmf -l 100 -- sleep 1
     - '{ sleep 1 & } && cpulimit -vmf -l 100 --pid=$! || [ $? = 2 ]'
-    - 'cpulimit -vm -l 100 --path="$(command -v sleep)" & pid=$! && \sleep 1 && kill $pid && wait $pid'
+    - cpulimit -vm -l 100 --path="$(command -v sleep)" & pid=$! && \sleep 1 && kill $pid && wait $pid
 
 about:
   home: http://limitcpu.sourceforge.net
